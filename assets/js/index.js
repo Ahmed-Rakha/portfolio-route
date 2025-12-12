@@ -57,11 +57,9 @@ var activeFilterClasses = [
   "shadow-primary/50",
 ];
 
-console.log(portfolioCards);
 function toggleTabs(tabsElements, activeClassesList, inactiveClassesList) {
   for (let i = 0; i < tabsElements.length; i++) {
     tabsElements[i].addEventListener("click", () => {
-      //   console.log(tabsElements[i].dataset.filter);
       for (let j = 0; j < tabsElements.length; j++) {
         tabsElements[j].classList.remove(...activeClassesList);
         tabsElements[j].classList.add(...inactiveClassesList);
@@ -134,7 +132,6 @@ function handleCarouselToggle(
     carouselContainer.getBoundingClientRect().width / cardsNumberInView;
 
   function updateCarousel() {
-    console.log("step", step);
     var moveBy = step * cardWidth;
     carouselContainer.style.transform = `translateX(${moveBy}px)`;
     updateIndicators();
@@ -163,7 +160,6 @@ function handleCarouselToggle(
 
   for (let i = 0; i < carouselIndicators.length; i++) {
     carouselIndicators[i].addEventListener("click", () => {
-      console.log(carouselIndicators[i]);
       resetIndicators();
       activateIndicator(i);
       step = Number(carouselIndicators[i].dataset.index);
@@ -198,17 +194,154 @@ function handleCarouselToggle(
 
 handleCarouselToggle(3, 6, carouselContainer, prevButton, nextButton);
 
-/*
-nonActive style classes
+// ==> implement Gear logic
 
-hover:shadow-lg hover:shadow-primary/50 
-bg-white dark:bg-slate-800
-text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700
-*/
+var settingsToggle = document.getElementById("settings-toggle");
+var settingsSidebar = document.getElementById("settings-sidebar");
+var closeSettings = document.getElementById("close-settings");
 
-/*
- active style classes
+// ==> implement closure of settings logic
+closeSettings.addEventListener("click", () => {
+  settingsSidebar.classList.add("translate-x-full");
+  settingsToggle.style.right = "0rem";
+});
 
-hover:bg-slate-100 dark:hover:bg-slate-700 active
-bg-linear-to-r from-primary to-secondary text-white shadow-lg shadow-primary/50
-*/
+document.body.addEventListener("click", (e) => {
+  var isSidebarClosed = settingsSidebar.classList.contains("translate-x-full");
+  var isSettingsToggleClicked = e.target === settingsToggle;
+  var isClickedInsideSidebar = settingsSidebar.contains(e.target);
+
+  if (!isSidebarClosed && !isSettingsToggleClicked && !isClickedInsideSidebar) {
+    settingsSidebar.classList.add("translate-x-full");
+    settingsToggle.style.right = "0rem";
+  }
+});
+settingsToggle.addEventListener("click", (e) => {
+  if (e.target.nodeName === "BUTTON") {
+    e.target.style.right = "20rem";
+    settingsSidebar.classList.remove("translate-x-full");
+
+    // populate colores sections with JS
+    var themeColoresGrid = document.getElementById("theme-colors-grid");
+
+    var themeColors = [
+      {
+        title: "Purple Blue",
+        primary: "#6366f1",
+        secondary: "#8b5cf6",
+      },
+      {
+        title: "Pink Orange",
+        primary: "#ec4899",
+        secondary: "#f97316",
+      },
+      {
+        title: "Green Emerald",
+        primary: "#10b981",
+        secondary: "#059669",
+      },
+      {
+        title: "Blue Cyan",
+        primary: "#3b82f6",
+        secondary: "#06b6d4",
+      },
+      {
+        title: "Red Rose",
+        primary: "#ef4444",
+        secondary: "#f43f5e",
+      },
+      {
+        title: "Amber Orange",
+        primary: "#f59e0b",
+        secondary: "#ea580c",
+      },
+    ];
+    var content = "";
+    for (var i = 0; i < themeColors.length; i++) {
+      content += `
+        <button
+                class="w-12 h-12 rounded-full cursor-pointer transition-transform hover:scale-110 border-2 border-slate-200 dark:border-slate-700 hover:border-primary shadow-sm"
+                title="${themeColors[i].title}"
+                data-primary="${themeColors[i].primary}"
+                data-secondary="${themeColors[i].secondary}"
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    ${themeColors[i].primary},
+                    ${themeColors[i].secondary}
+                  );
+                "
+              ></button
+              >`;
+    }
+
+    themeColoresGrid.innerHTML = content;
+
+    // handle active theme color
+    var themeColorButtons = document.querySelectorAll(
+      "#theme-colors-grid button"
+    );
+    for (let i = 0; i < themeColorButtons.length; i++) {
+      themeColorButtons[i].addEventListener("click", function (e) {
+        var primary = e.target.dataset.primary;
+        var secondary = e.target.dataset.secondary;
+        document.documentElement.style.setProperty("--color-primary", primary);
+        document.documentElement.style.setProperty(
+          "--color-secondary",
+          secondary
+        );
+
+        for (let j = 0; j < themeColorButtons.length; j++) {
+          themeColorButtons[j].classList.remove(
+            "ring-2",
+            "ring-primary",
+            "ring-offset-2",
+            "ring-offset-white",
+            "dark:ring-offset-slate-900"
+          );
+        }
+        e.target.classList.add(
+          "ring-2",
+          "ring-primary",
+          "ring-offset-2",
+          "ring-offset-white",
+          "dark:ring-offset-slate-900"
+        );
+      });
+    }
+
+    //
+  }
+
+  // handle fonts
+  var fontButtons = document.querySelectorAll(".font-option");
+  var activeFontBtnClasses = [
+    "active",
+    "border-primary",
+    "bg-slate-50",
+    "dark:bg-slate-800",
+  ];
+  var inactiveFontBtnClasses = ["border-slate-200", "dark:border-slate-700"];
+  var defaultFontFamily = "tajawal";
+
+  for (let i = 0; i < fontButtons.length; i++) {
+    if (fontButtons[i].dataset.font === defaultFontFamily) {
+      fontButtons[i].classList.add(...activeFontBtnClasses);
+      fontButtons[i].classList.remove(...inactiveFontBtnClasses);
+    }
+
+    fontButtons[i].addEventListener("click", function (e) {
+      var targetFontFamily = "font-" + fontButtons[i].dataset.font;
+      var currentFontFamily =
+        document.body.classList.value.match(/font-(\S+)\b/)[0];
+      document.body.classList.replace(currentFontFamily, `${targetFontFamily}`);
+
+      for (let j = 0; j < fontButtons.length; j++) {
+        fontButtons[j].classList.remove(...activeFontBtnClasses);
+        fontButtons[j].classList.add(...inactiveFontBtnClasses);
+      }
+      fontButtons[i].classList.add(...activeFontBtnClasses);
+      fontButtons[i].classList.remove(...inactiveFontBtnClasses);
+    });
+  }
+});
