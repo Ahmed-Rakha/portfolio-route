@@ -288,16 +288,17 @@ function updateThemeColors() {
   );
   var defaultPrimaryThemeColor = "#6366f1";
   var defaultSecondaryThemeColor = "#8b5cf6";
+  var activeThemeColorClassList = [
+    "ring-2",
+    "ring-primary",
+    "ring-offset-2",
+    "ring-offset-white",
+    "dark:ring-offset-slate-900",
+  ];
 
   for (let i = 0; i < themeColorButtons.length; i++) {
     if (themeColorButtons[i].dataset.primary === defaultPrimaryThemeColor) {
-      themeColorButtons[i].classList.add(
-        "ring-2",
-        "ring-primary",
-        "ring-offset-2",
-        "ring-offset-white",
-        "dark:ring-offset-slate-900"
-      );
+      themeColorButtons[i].classList.add(...activeThemeColorClassList);
       document.documentElement.style.setProperty(
         "--color-primary",
         defaultPrimaryThemeColor
@@ -307,13 +308,7 @@ function updateThemeColors() {
         defaultSecondaryThemeColor
       );
     } else {
-      themeColorButtons[i].classList.remove(
-        "ring-2",
-        "ring-primary",
-        "ring-offset-2",
-        "ring-offset-white",
-        "dark:ring-offset-slate-900"
-      );
+      themeColorButtons[i].classList.remove(...activeThemeColorClassList);
     }
     themeColorButtons[i].addEventListener("click", function (e) {
       var primary = e.target.dataset.primary;
@@ -325,21 +320,9 @@ function updateThemeColors() {
       );
 
       for (let j = 0; j < themeColorButtons.length; j++) {
-        themeColorButtons[j].classList.remove(
-          "ring-2",
-          "ring-primary",
-          "ring-offset-2",
-          "ring-offset-white",
-          "dark:ring-offset-slate-900"
-        );
+        themeColorButtons[j].classList.remove(...activeThemeColorClassList);
       }
-      e.target.classList.add(
-        "ring-2",
-        "ring-primary",
-        "ring-offset-2",
-        "ring-offset-white",
-        "dark:ring-offset-slate-900"
-      );
+      e.target.classList.add(...activeThemeColorClassList);
     });
   }
 }
