@@ -312,36 +312,36 @@ settingsToggle.addEventListener("click", (e) => {
 
     //
   }
-
-  // handle fonts
-  var fontButtons = document.querySelectorAll(".font-option");
-  var activeFontBtnClasses = [
-    "active",
-    "border-primary",
-    "bg-slate-50",
-    "dark:bg-slate-800",
-  ];
-  var inactiveFontBtnClasses = ["border-slate-200", "dark:border-slate-700"];
-  var defaultFontFamily = "tajawal";
-
-  for (let i = 0; i < fontButtons.length; i++) {
-    if (fontButtons[i].dataset.font === defaultFontFamily) {
-      fontButtons[i].classList.add(...activeFontBtnClasses);
-      fontButtons[i].classList.remove(...inactiveFontBtnClasses);
-    }
-
-    fontButtons[i].addEventListener("click", function (e) {
-      var targetFontFamily = "font-" + fontButtons[i].dataset.font;
-      var currentFontFamily =
-        document.body.classList.value.match(/font-(\S+)\b/)[0];
-      document.body.classList.replace(currentFontFamily, `${targetFontFamily}`);
-
-      for (let j = 0; j < fontButtons.length; j++) {
-        fontButtons[j].classList.remove(...activeFontBtnClasses);
-        fontButtons[j].classList.add(...inactiveFontBtnClasses);
-      }
-      fontButtons[i].classList.add(...activeFontBtnClasses);
-      fontButtons[i].classList.remove(...inactiveFontBtnClasses);
-    });
-  }
 });
+
+// handle fonts
+var fontButtons = document.querySelectorAll(".font-option");
+var activeFontBtnClasses = [
+  "active",
+  "border-primary",
+  "bg-slate-50",
+  "dark:bg-slate-800",
+];
+var inactiveFontBtnClasses = ["border-slate-200", "dark:border-slate-700"];
+var defaultFontFamily = "tajawal";
+
+for (let i = 0; i < fontButtons.length; i++) {
+  if (fontButtons[i].dataset.font === defaultFontFamily) {
+    fontButtons[i].classList.add(...activeFontBtnClasses);
+    fontButtons[i].classList.remove(...inactiveFontBtnClasses);
+  }
+
+  fontButtons[i].addEventListener("click", function (e) {
+    var targetFontFamily = "font-" + fontButtons[i].dataset.font;
+    var currentFontFamily =
+      document.body.classList.value.match(/font-(\S+)\b/)[0];
+    document.body.classList.replace(currentFontFamily, `${targetFontFamily}`);
+
+    for (let j = 0; j < fontButtons.length; j++) {
+      fontButtons[j].classList.remove(...activeFontBtnClasses);
+      fontButtons[j].classList.add(...inactiveFontBtnClasses);
+    }
+    fontButtons[i].classList.add(...activeFontBtnClasses);
+    fontButtons[i].classList.remove(...inactiveFontBtnClasses);
+  });
+}
