@@ -68,18 +68,22 @@ function toggleTabs(tabsElements, activeClassesList, inactiveClassesList) {
       }
 
       for (let x = 0; x < portfolioCards.length; x++) {
-        var card = portfolioCards[x];
-        var filter = tabsElements[i].dataset.filter.toLowerCase();
-        var category = card.dataset.category.toLowerCase();
+        let card = portfolioCards[x];
+        let filter = tabsElements[i].dataset.filter.toLowerCase();
+        let category = card.dataset.category.toLowerCase();
 
         if (filter === "all" || category === filter) {
           card.style.opacity = 1;
           card.style.transform = "scale(1)";
-          //   card.style.display = "block";
+          setTimeout(() => {
+            card.style.display = "block";
+          }, 500);
         } else {
           card.style.opacity = 0;
           card.style.transform = "scale(0.8)";
-          //   card.style.display = "none";
+          setTimeout(() => {
+            card.style.display = "none";
+          }, 500);
         }
       }
       tabsElements[i].classList.add(...activeClassesList);
