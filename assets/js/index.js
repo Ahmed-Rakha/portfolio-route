@@ -221,44 +221,49 @@ settingsToggle.addEventListener("click", (e) => {
     e.target.style.right = "20rem";
     settingsSidebar.classList.remove("translate-x-full");
 
-    // populate colores sections with JS
-    var themeColoresGrid = document.getElementById("theme-colors-grid");
+    //
+  }
+});
 
-    var themeColors = [
-      {
-        title: "Purple Blue",
-        primary: "#6366f1",
-        secondary: "#8b5cf6",
-      },
-      {
-        title: "Pink Orange",
-        primary: "#ec4899",
-        secondary: "#f97316",
-      },
-      {
-        title: "Green Emerald",
-        primary: "#10b981",
-        secondary: "#059669",
-      },
-      {
-        title: "Blue Cyan",
-        primary: "#3b82f6",
-        secondary: "#06b6d4",
-      },
-      {
-        title: "Red Rose",
-        primary: "#ef4444",
-        secondary: "#f43f5e",
-      },
-      {
-        title: "Amber Orange",
-        primary: "#f59e0b",
-        secondary: "#ea580c",
-      },
-    ];
-    var content = "";
-    for (var i = 0; i < themeColors.length; i++) {
-      content += `
+function updateThemeColors() {
+  // populate colores sections with JS
+  var themeColoresGrid = document.getElementById("theme-colors-grid");
+
+  var themeColors = [
+    {
+      title: "Purple Blue",
+      primary: "#6366f1",
+      secondary: "#8b5cf6",
+    },
+    {
+      title: "Pink Orange",
+      primary: "#ec4899",
+      secondary: "#f97316",
+    },
+    {
+      title: "Green Emerald",
+      primary: "#10b981",
+      secondary: "#059669",
+    },
+    {
+      title: "Blue Cyan",
+      primary: "#3b82f6",
+      secondary: "#06b6d4",
+    },
+    {
+      title: "Red Rose",
+      primary: "#ef4444",
+      secondary: "#f43f5e",
+    },
+    {
+      title: "Amber Orange",
+      primary: "#f59e0b",
+      secondary: "#ea580c",
+    },
+  ];
+  var content = "";
+  for (var i = 0; i < themeColors.length; i++) {
+    content += `
         <button
                 class="w-12 h-12 rounded-full cursor-pointer transition-transform hover:scale-110 border-2 border-slate-200 dark:border-slate-700 hover:border-primary shadow-sm"
                 title="${themeColors[i].title}"
@@ -273,47 +278,72 @@ settingsToggle.addEventListener("click", (e) => {
                 "
               ></button
               >`;
+  }
+
+  themeColoresGrid.innerHTML = content;
+
+  // handle active theme color
+  var themeColorButtons = document.querySelectorAll(
+    "#theme-colors-grid button"
+  );
+  var defaultPrimaryThemeColor = "#6366f1";
+  var defaultSecondaryThemeColor = "#8b5cf6";
+
+  for (let i = 0; i < themeColorButtons.length; i++) {
+    if (themeColorButtons[i].dataset.primary === defaultPrimaryThemeColor) {
+      themeColorButtons[i].classList.add(
+        "ring-2",
+        "ring-primary",
+        "ring-offset-2",
+        "ring-offset-white",
+        "dark:ring-offset-slate-900"
+      );
+      document.documentElement.style.setProperty(
+        "--color-primary",
+        defaultPrimaryThemeColor
+      );
+      document.documentElement.style.setProperty(
+        "--color-secondary",
+        defaultSecondaryThemeColor
+      );
+    } else {
+      themeColorButtons[i].classList.remove(
+        "ring-2",
+        "ring-primary",
+        "ring-offset-2",
+        "ring-offset-white",
+        "dark:ring-offset-slate-900"
+      );
     }
+    themeColorButtons[i].addEventListener("click", function (e) {
+      var primary = e.target.dataset.primary;
+      var secondary = e.target.dataset.secondary;
+      document.documentElement.style.setProperty("--color-primary", primary);
+      document.documentElement.style.setProperty(
+        "--color-secondary",
+        secondary
+      );
 
-    themeColoresGrid.innerHTML = content;
-
-    // handle active theme color
-    var themeColorButtons = document.querySelectorAll(
-      "#theme-colors-grid button"
-    );
-    for (let i = 0; i < themeColorButtons.length; i++) {
-      themeColorButtons[i].addEventListener("click", function (e) {
-        var primary = e.target.dataset.primary;
-        var secondary = e.target.dataset.secondary;
-        document.documentElement.style.setProperty("--color-primary", primary);
-        document.documentElement.style.setProperty(
-          "--color-secondary",
-          secondary
-        );
-
-        for (let j = 0; j < themeColorButtons.length; j++) {
-          themeColorButtons[j].classList.remove(
-            "ring-2",
-            "ring-primary",
-            "ring-offset-2",
-            "ring-offset-white",
-            "dark:ring-offset-slate-900"
-          );
-        }
-        e.target.classList.add(
+      for (let j = 0; j < themeColorButtons.length; j++) {
+        themeColorButtons[j].classList.remove(
           "ring-2",
           "ring-primary",
           "ring-offset-2",
           "ring-offset-white",
           "dark:ring-offset-slate-900"
         );
-      });
-    }
-
-    //
+      }
+      e.target.classList.add(
+        "ring-2",
+        "ring-primary",
+        "ring-offset-2",
+        "ring-offset-white",
+        "dark:ring-offset-slate-900"
+      );
+    });
   }
-});
-
+}
+updateThemeColors();
 // handle fonts
 var fontButtons = document.querySelectorAll(".font-option");
 var activeFontBtnClasses = [
@@ -325,23 +355,37 @@ var activeFontBtnClasses = [
 var inactiveFontBtnClasses = ["border-slate-200", "dark:border-slate-700"];
 var defaultFontFamily = "tajawal";
 
-for (let i = 0; i < fontButtons.length; i++) {
-  if (fontButtons[i].dataset.font === defaultFontFamily) {
-    fontButtons[i].classList.add(...activeFontBtnClasses);
-    fontButtons[i].classList.remove(...inactiveFontBtnClasses);
-  }
+updateFont();
 
-  fontButtons[i].addEventListener("click", function (e) {
-    var targetFontFamily = "font-" + fontButtons[i].dataset.font;
-    var currentFontFamily =
-      document.body.classList.value.match(/font-(\S+)\b/)[0];
-    document.body.classList.replace(currentFontFamily, `${targetFontFamily}`);
-
-    for (let j = 0; j < fontButtons.length; j++) {
-      fontButtons[j].classList.remove(...activeFontBtnClasses);
-      fontButtons[j].classList.add(...inactiveFontBtnClasses);
+function updateFont() {
+  for (let i = 0; i < fontButtons.length; i++) {
+    if (fontButtons[i].dataset.font === defaultFontFamily) {
+      fontButtons[i].classList.add(...activeFontBtnClasses);
+      fontButtons[i].classList.remove(...inactiveFontBtnClasses);
+    } else {
+      fontButtons[i].classList.remove(...activeFontBtnClasses);
+      fontButtons[i].classList.add(...inactiveFontBtnClasses);
     }
-    fontButtons[i].classList.add(...activeFontBtnClasses);
-    fontButtons[i].classList.remove(...inactiveFontBtnClasses);
-  });
+
+    fontButtons[i].addEventListener("click", function (e) {
+      var targetFontFamily = "font-" + fontButtons[i].dataset.font;
+      var currentFontFamily =
+        document.body.classList.value.match(/font-(\S+)\b/)[0];
+      document.body.classList.replace(currentFontFamily, `${targetFontFamily}`);
+
+      for (let j = 0; j < fontButtons.length; j++) {
+        fontButtons[j].classList.remove(...activeFontBtnClasses);
+        fontButtons[j].classList.add(...inactiveFontBtnClasses);
+      }
+      fontButtons[i].classList.add(...activeFontBtnClasses);
+      fontButtons[i].classList.remove(...inactiveFontBtnClasses);
+    });
+  }
 }
+
+// ==> implement reset settings logic
+var resetSettings = document.getElementById("reset-settings");
+resetSettings.addEventListener("click", () => {
+  updateFont();
+  updateThemeColors();
+});
