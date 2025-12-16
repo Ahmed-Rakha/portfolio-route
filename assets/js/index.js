@@ -29,7 +29,7 @@ const targetSections = document.querySelectorAll(`
 var observerOptions = {
   root: null,
   rootMargin: "0px",
-  threshold: 0.25, 
+  threshold: 0.25,
 };
 
 var observer = new IntersectionObserver(observerCallback, observerOptions);
@@ -230,8 +230,10 @@ closeSettings.addEventListener("click", () => {
 });
 
 document.body.addEventListener("click", (e) => {
+  console.log("body clicked", e.target);
   var isSidebarClosed = settingsSidebar.classList.contains("translate-x-full");
-  var isSettingsToggleClicked = e.target === settingsToggle;
+  var isSettingsToggleClicked =
+    e.target === settingsToggle || e.target.parentElement === settingsToggle;
   var isClickedInsideSidebar = settingsSidebar.contains(e.target);
 
   if (!isSidebarClosed && !isSettingsToggleClicked && !isClickedInsideSidebar) {
@@ -240,12 +242,10 @@ document.body.addEventListener("click", (e) => {
   }
 });
 settingsToggle.addEventListener("click", (e) => {
-  if (e.target.nodeName === "BUTTON") {
-    e.target.style.right = "20rem";
-    settingsSidebar.classList.remove("translate-x-full");
-
-    //
-  }
+  console.log("clicked", e.currentTarget);
+  e.currentTarget.style.right = "20rem";
+  settingsSidebar.classList.remove("translate-x-full");
+  e.stopPropagation();
 });
 
 function updateThemeColors() {
