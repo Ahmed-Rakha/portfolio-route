@@ -230,7 +230,6 @@ closeSettings.addEventListener("click", () => {
 });
 
 document.body.addEventListener("click", (e) => {
-  console.log("body clicked", e.target);
   var isSidebarClosed = settingsSidebar.classList.contains("translate-x-full");
   var isSettingsToggleClicked =
     e.target === settingsToggle || e.target.parentElement === settingsToggle;
