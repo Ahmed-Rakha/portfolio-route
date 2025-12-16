@@ -10,20 +10,43 @@ const targetSections = document.querySelectorAll(`
   #contact
 `);
 
-window.addEventListener("scroll", () => {
-  for (var i = 0; i < targetSections.length; i++) {
-    var rect = targetSections[i].getBoundingClientRect();
-    var link = document.querySelector(`a[href="#${targetSections[i].id}"]`);
-    if (
-      rect.top <= window.innerHeight / 4 &&
-      rect.bottom >= window.innerHeight / 4
-    ) {
+// window.addEventListener("scroll", () => {
+//   for (var i = 0; i < targetSections.length; i++) {
+//     var rect = targetSections[i].getBoundingClientRect();
+//     var link = document.querySelector(`a[href="#${targetSections[i].id}"]`);
+//     if (
+//       rect.top <= window.innerHeight / 4 &&
+//       rect.bottom >= window.innerHeight / 4
+//     ) {
+//       link.classList.add("active");
+//     } else {
+//       link.classList.remove("active");
+//     }
+//   }
+// });
+
+// another approach using Intersection Observer API which is more efficient for performance
+var observerOptions = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 0.25, 
+};
+
+var observer = new IntersectionObserver(observerCallback, observerOptions);
+
+function observerCallback(entries, observer) {
+  for (var i = 0; i < entries.length; i++) {
+    var link = document.querySelector(`a[href="#${entries[i].target.id}"]`);
+    if (entries[i].isIntersecting) {
       link.classList.add("active");
     } else {
       link.classList.remove("active");
     }
   }
-});
+}
+for (var i = 0; i < targetSections.length; i++) {
+  observer.observe(targetSections[i]);
+}
 
 // ==> implement theme toggle for dark/light mode
 document.getElementById("theme-toggle-button").addEventListener("click", () => {
